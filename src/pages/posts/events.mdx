@@ -61,7 +61,8 @@ const emailer = new Emailer();
 const eventEmitter = new EventEmitter();
 
 eventEmitter.on('userCreated', emailer.send);
-eventEmitter.emit('userCreated', 'Rafael', 'To whom it may concern ...');
+eventEmitter.emit('userCreated',
+ 'Rafael', 'To whom it may concern ...');
 ```
 
 A lot of NodeJS depends on this features, and you can find a lot of other NodeJS APIs that inherit from the event API.

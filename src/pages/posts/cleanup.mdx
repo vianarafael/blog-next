@@ -1,0 +1,77 @@
+---
+slug: cleanup
+title: Cleanup Function in useEffect
+date: 2021-01-01
+author: rafael
+tags:
+  - react
+---
+
+## The error message:
+
+```
+Can't perform a React state update on an unmounted component.
+This is a no-op, but it indicates a memory leak in your
+application. To fix, cancel all subscriptions and
+asynchronous tasks in a useEffect cleanup function.
+```
+
+## Why is this happening?
+
+On useEffect I was fetching data from the back-end, and updating the state (useState & useReducer):
+
+```
+ const [users, setUsers] = useState([]);
+ useEffect(() => {
+   async function fetchData() {
+     const result =
+     await fetch('https://jsonplaceholder.typicode.com/users')
+       .then((res) => res.json())
+       .then((data) => {
+         setTimeout(() => {
+           setUsers(data);
+           dispatch({ type: 'in' });
+         }, 3000);
+       });
+   }
+   fetchData();
+ }, []);
+
+```
+
+The problem is that the fetch request takes time (in the case above I'm forcing the error with setTimeOut), and the component has unmounted when the async request finishes.
+
+## Reading the error message
+
+The code (after the await) is trying to update the state even if the component no longer is on the page.
+
+The error message itself suggests a cleanup function
+
+# What is a Cleanup function?
+
+If you return a function within the useEffect hook, React will run it when it is time to clean up:
+
+```
+ const [users, setUsers] = useState([]);
+ useEffect(() => {
+   let isCancelled = false;
+   async function fetchData() {
+     const result =
+     await fetch('https://jsonplaceholder.typicode.com/users')
+       .then((res) => res.json())
+       .then((data) => {
+         setTimeout(() => {
+           if (!isCancelled) {
+             setUsers(data);
+             dispatch({ type: 'in' });
+           }
+         }, 3000);
+       });
+   }
+   fetchData();
+   return () => (isCancelled = true);
+ }, []);
+
+```
+
+React runs the clean up when component unmounts - solving our problem.
