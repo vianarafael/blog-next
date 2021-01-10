@@ -1,0 +1,161 @@
+---
+slug: heroku
+title: Deploying a React/Node app to Heroku
+date: 2021-01-10
+author: rafael
+tags:
+  - react
+  - node
+---
+
+# Creating the Front-End & Back-End
+
+Let's start by bootstrapping our application with `create-react-app`
+
+Now let's create a simple server that will send data to our front-end.
+
+We need to install express:
+
+```
+yarn add express
+```
+
+or
+
+```
+npm i express
+```
+
+Next step is to create a simple server.
+On the root directory, create a server.js file - and in that file let's write our server.
+
+```
+const express = require('express');
+const app = express();
+const PORT = process.env.PORT || 3001;
+
+app.use(express.static(__dirname + '/build'));
+
+app.listen(PORT,
+() => console.log(`App listening on ${PORT} 🚀`))
+```
+
+Currently our package.json looks like this:
+
+```
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+  },
+```
+
+Let's make the start script be what we use to run the server:
+
+```
+  "scripts": {
+    "serve": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "start": "node server.js"
+  },
+```
+
+Let's add an endpoint with some data to be served - on your server.js add:
+
+```
+app.use('/api', (req, res) => {
+    res.send('data from the server');
+})
+```
+
+if you navigate to localhost:3001/api you will be able to see the data (make sure the server is running)
+
+And finally, let's call our endpoint from the front-end:
+
+You can use fetch, but I prefer axios (install it w/ yarn or npm)
+
+if we were to hardcode our server address it would be:
+
+```
+axios.get('localhost:3001/api')
+```
+
+The problem is now that only works for development, when we deploy the app to heroku we will have to change the api call to something like:
+
+```
+axios.get('whatever-is-the-name-on-heroku/api')
+```
+
+A better option is to call it relatively
+
+```
+axios.get('/api')
+```
+
+That will work for production, but not development.
+We nee to let our development know about our server:
+
+# Adding a proxy
+
+we can achieve that by adding a proxy - on our package.json:
+
+```
+...
+proxy: "http://localhost:3001",
+...
+```
+
+# Get the server data on the Front-End
+
+We are now ready to call it from the front-end (on the App.js):
+
+```
+import axios from 'axios';
+import { useState, useEffect } from 'react';
+
+function App() {
+  const [data, setData] = useState();
+
+  useEffect(() => {
+    axios.get('/api').then((res) => setData(res.data));
+  }, []);
+  return (
+    <div className="App">
+      <p>{data}</p>
+    </div>
+  );
+}
+
+export default App;
+```
+
+Cool! We have our data.
+
+Now lets deploy to Heroku (you will need a Heroku account & Heroku CLI)
+Create a new app on heroku, and :
+
+# Login
+
+```
+heroku login
+```
+
+# Clone the repository
+
+```
+heroku git:clone -a the-name-of-your-app
+cd the-name-of-your-app
+```
+
+# Deploy your changes
+
+```
+git add -A
+git commit -m "deploying to Heroku"
+git push heroku main
+```
+
+And that is it - a full stack app deployed to Heroku.
