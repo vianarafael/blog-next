@@ -1,0 +1,64 @@
+---
+slug: rest
+title: RESTful APIs
+date: 2021-03-08
+author: rafael
+tags:
+  - node
+---
+
+## There are two different approaches for architectural design:
+1. Start with a blank drawing board - and build-up architecture from known components. This emphasizes creativity.
+2. Start with the system needs, and start applying constraints to elements that will benefit the system as a whole. This emphasizes restraint and understanding of the system context.
+
+REST is a fruit of the second approach.
+
+REST = Representational State Transfer
+
+## It is based on Resources (resources are just stuff).
+Rafael is an example of a user resource.
+
+## Representations is how those resources get manipulated
+An example is JSON.
+e.g. 
+Resource: person Rafael
+Service: contact info (GET)
+Representation: name. Twitter, github
+{ 
+“name”: “Rafael Viana”, 
+“Twitter”: “@vianarafaelds”,
+“Github”: “vianarafael”
+}
+
+## Constraints
+There are six constraints to a RESTful API:
+
+# 1. Uniform interface
+The format of you API, i.e.:
+HTTP verbs (GET, PUT, POST, DELETE)
+URIs (resource name)
+HTTP responses (status, body, head, …)
+
+# 2. Stateless
+Servers do not hold client state
+Each request have enough context to process the message
+Session state is kept on the client
+
+# 3. Client-Server
+Separation of concerns
+The systems are assumed to be disconnected
+Uniform interface is what links the disconnected systems
+
+# 4. Cacheable
+Server responses (representations) are cacheable
+
+# 5. Layered Systems
+The client doesn't know the inner working of the API - the client only knows the representation that comes back.
+
+# 6. Code on Demand
+(That is the only optional constraint).
+
+The server can transfer logic to the client - and the client executes the logic.
+
+That summary was based on [Roy Fielding's Dissertation](https://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm)
+
