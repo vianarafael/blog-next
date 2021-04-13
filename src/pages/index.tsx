@@ -3,8 +3,7 @@ import BasicMeta from "../components/meta/BasicMeta";
 import OpenGraphMeta from "../components/meta/OpenGraphMeta";
 import TwitterCardMeta from "../components/meta/TwitterCardMeta";
 import { SocialList } from "../components/SocialList";
-// import rafaflix from "../assets/projects-photos/rafaflix.png";
-// import rafachess from "../assets/projects-photos/rafachess.png"
+
 
 
 export default function Index() {
