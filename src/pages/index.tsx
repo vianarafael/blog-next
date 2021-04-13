@@ -3,6 +3,9 @@ import BasicMeta from "../components/meta/BasicMeta";
 import OpenGraphMeta from "../components/meta/OpenGraphMeta";
 import TwitterCardMeta from "../components/meta/TwitterCardMeta";
 import { SocialList } from "../components/SocialList";
+// import rafaflix from "../assets/projects-photos/rafaflix.png";
+// import rafachess from "../assets/projects-photos/rafachess.png"
+
 
 export default function Index() {
   return (
@@ -12,11 +15,21 @@ export default function Index() {
       <TwitterCardMeta url={"/"} />
       <div className="container">
         <div>
-          <h1>
-            Hi, I'm Rafael<span className="fancy">.</span>
-          </h1>
-          <span className="handle"><a href="https://twitter.com/vianarafaelds" target="_blank">@vianarafaelds</a></span>
-          <h2>I write code and change diapers.</h2>
+          <h1>Recent Projects</h1>
+          <div className="projects-container">
+            <div className="project">
+              <a href="https://rafaflix.com" target="_blank">
+                <img src="/images/rafaflix.png" alt="netflix clone" />
+                <h4>Rafaflix</h4>
+              </a>
+            </div>
+            <div className="project">
+              <a href="https://rafachess.xyz" target="_blank">
+                <img src="/images/rafachess.png" />
+                <h4>Rafachess</h4>
+              </a>
+            </div>
+          </div>
           <SocialList />
         </div>
       </div>
@@ -32,20 +45,31 @@ export default function Index() {
           font-size: 2.5rem;
           margin: 0;
           font-weight: 500;
+          text-align: center;
         }
         h2 {
           font-size: 1.75rem;
           font-weight: 400;
           line-height: 1.25;
         }
-        .fancy {
-          color: #15847d;
+
+        h4 {
+          text-align: center;
         }
         .handle {
           display: inline-block;
           margin-top: 0.275em;
           color: #9b9b9b;
           letter-spacing: 0.05em;
+        }
+
+        .projects-container {
+          margin-top: 2rem;
+        }
+
+        .project {
+          display: inline-block;
+          margin: 0 1rem;
         }
 
         @media (min-width: 769px) {

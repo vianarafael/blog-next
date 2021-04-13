@@ -29,6 +29,10 @@ export function SocialList({}) {
         a:not(:last-child) {
           margin-right: 2em;
         }
+        div {
+          text-align: center;
+          margin-top: 2rem;
+        }
       `}</style>
     </div>
   );
