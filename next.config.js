@@ -1,19 +1,7 @@
 const withMdxEnhanced = require("next-mdx-enhanced");
 const rehypePrism = require("@mapbox/rehype-prism");
-const withImages = require("next-images");
-
-// module.exports = withImages({
-//   fileExtensions: ["jpg", "jpeg", "png", "gif"],
-//   webpack(config, options) {
-//     return config;
-//   },
-// });
   
-module.exports = withMdxEnhanced(
-  withImages({
-    fileExtensions: ["jpg", "jpeg", "png", "gif"],
-  }),
-  {
+module.exports = withMdxEnhanced({
     layoutPath: "src/layouts",
     defaultLayout: true,
     rehypePlugins: [rehypePrism],
