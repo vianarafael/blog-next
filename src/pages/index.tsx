@@ -28,6 +28,12 @@ export default function Index() {
                 <h4>Rafachess</h4>
               </a>
             </div>
+            <div className="project">
+              <a href="http://3.14.10.124/" target="_blank">
+                <img src="/images/rafascode.png" />
+                <h4>RafaSCode</h4>
+              </a>
+            </div>
           </div>
           <SocialList />
         </div>
