@@ -19,19 +19,19 @@ export default function Index() {
             <div className="project">
               <a href="https://rafaflix.com" target="_blank">
                 <img src="/images/rafaflix.png" alt="netflix clone" />
-                <h4>Rafaflix</h4>
+                <h4>Watch List</h4>
               </a>
             </div>
             <div className="project">
               <a href="https://rafachess.xyz" target="_blank">
                 <img src="/images/rafachess.png" />
-                <h4>Rafachess</h4>
+                <h4>Multiplayer Chess</h4>
               </a>
             </div>
             <div className="project">
               <a href="http://3.14.10.124/" target="_blank">
                 <img src="/images/rafascode.png" />
-                <h4>RafaSCode</h4>
+                <h4>Interactive coding environment</h4>
               </a>
             </div>
           </div>
