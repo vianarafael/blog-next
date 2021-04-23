@@ -1,0 +1,102 @@
+---
+slug: context
+title: Bye bye Redux - useContext() + useReducer() for Global State Management
+date: 2021-04-23
+author: rafael
+tags:
+  - react
+---
+
+## First Half
+# Context first 
+We will be using useContext  to pass data down through the component three avoiding props drilling
+<img />
+
+How:
+
+### Step #1 
+
+Create a context using the create context method
+
+### Step # 2 
+
+Pass the context value at a high level of the component three
+
+### Step #3 - Consuming the context value 
+
+Import useContext   
+Import the necessary context  
+Call the useContext function passing the context as its argument  
+```
+<App>
+	<InBetweenComponent>
+		<Child>
+```
+```
+// App Component
+Import { createContext } from ‘react’
+Export const MyContext = createContext()
+…
+Return (
+<MyContext.Provider value={someValue}> {/* don’t worry about what goes in the value for now */}
+…
+</MyContext.Provider>
+```
+
+```
+// Child Component
+	Import { useContext } from ‘react’
+	Import { MyContext} from ‘../App’
+	Const someValue = useContext(MyContext)
+...
+```
+Cool! We can use the context globally, now we need to be able to change it.
+
+## Second half
+# useReducer
+### Step #1 
+Create a global setter in the App.js using the reducer hook.
+### Step #2 
+Make it available and use the context (?) in the required components.
+
+```
+// App Component
+import { useReducer } from ‘react’; // it gives access to the state and the dispatch method
+…
+const initState = 0;
+
+const reducer = (state, action) => {
+    switch(action) {
+	    case ‘someAction’;
+		    // do something;
+	    default:
+		    return state;
+}
+
+const App() {
+	const [state, dispatch] = useReducer(reducer, initState);
+…
+    return (
+        <MyContext.Provider value={{myState: state, myDispatch: dispatch }}>
+…
+```
+
+```
+// Child Component
+	import { useContext } from ‘react’
+	import { MyContext} from ‘../App’
+	const codeContext = useContext(MyContext)
+
+…
+    return (
+	    <button onClick={() => dispatch(‘someAction)}>My Button</button>
+…
+```
+
+If you have more components that need the context all you need to do is to repeat the second half for the other components
+
+
+
+
+
+ 
