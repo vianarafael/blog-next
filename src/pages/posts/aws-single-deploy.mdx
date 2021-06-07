@@ -1,0 +1,192 @@
+---
+slug: aws-single-deploy
+title: Deploying a single repo Node/React app to AWS CodePipeline
+date: 2021-06-07
+author: rafael
+tags:
+  - react
+  - node
+---
+
+# Creating the Front-End & Back-End
+
+Create a react application using create-react-app.
+
+On the root folder create a server.js file, and install express,cors and axios.
+
+Create an express server:
+
+server.js
+
+```
+const express = require("express");
+const cors = require("cors");
+const path = require("path");
+const app = express();
+app.use(cors());
+app.use(express.static(path.join(__dirname, "build")));
+app.use(express.static("public"));
+
+app.get("/api", (req, res) => {
+ res.send("Hello, world!!!");
+});
+
+app.listen(3001);
+
+```
+
+The app is serving the react build files, and sending the data from the /api endpoint.
+
+On the package.json add a proxy to the backend.
+
+package.json
+
+```
+...
+"proxy": "http://localhost:3001",
+...
+```
+
+Get the data being served on the front-end:
+
+src/App.js
+
+```
+import { useEffect } from "react";
+import axios from "axios";
+
+function App() {
+ useEffect(() => {
+   axios.get("/api").then((res) => console.log(res.data));
+ }, []);
+...
+```
+
+# CodeDeploy prep
+
+Since our application will use the EC2/On-Premises compute platform, we need to create an AppSpec file on the root of our project.
+
+This will determine:
+
+- What will be installed in the instance
+- Which lifecycle event hook to run in response to deployment lifecycle events
+
+app.spec.yml
+
+```
+version: 0.0
+os: linux
+files:
+ - source: /
+   destination: /home/ec2-user/fullstack-app
+hooks:
+ ApplicationStop:
+   - location: scripts/application_stop.sh
+     timeout: 300
+     runas: ec2-user
+ BeforeInstall:
+   - location: scripts/before_install.sh
+     timeout: 300
+     runas: ec2-user
+ ApplicationStart:
+   - location: scripts/application_start.sh
+     timeout: 300
+     runas: ec2-user
+
+```
+
+Now, let’s create the scripts specified on the lifecycle event hooks:
+
+scripts/application_stop.sh
+
+```
+#!/bin/bash
+#Stopping existing node servers
+echo "Stopping any existing node servers"
+pkill node
+
+```
+
+scripts/before_install.sh
+
+```
+#!/bin/bash
+#Stopping existing node servers
+echo "Stopping any existing node servers"
+pkill node
+
+```
+
+scripts/application_start.sh
+
+```
+#!/bin/bash
+
+#give permission for everything in the express-app directory
+sudo chmod -R 777 /home/ec2-user/fullstack-app
+
+#navigate into our working directory where we have all our github files
+cd /home/ec2-user/fullstack-app
+
+#add npm and node to path
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # loads nvm bash_completion (node is in path now)
+
+#install node modules
+npm install
+
+#start our node app in the background
+node server.js > app.out.log 2> app.err.log < /dev/null &
+
+```
+
+Push the code to a Github repo.
+
+# On your AWS Management Console
+
+### create 2 IAM roles:
+
+- For the EC2 instance (filter the policy AmazonEC2RoleforAWSCodeDeploy)
+- For the CodeDeploy
+
+### Create an EC2 instance (using Linux OS)
+
+On Step3: Configure Instance Details, change:
+IAM role to the one that you created for the EC2 instance
+On the Advanced Details sections add the following script:
+
+```
+#!/bin/bash
+sudo yum -y update
+sudo yum -y install ruby
+sudo yum -y install wget
+cd /home/ec2-user
+wget https://aws-codedeploy-us-east-1.s3.amazonaws.com/latest/install
+sudo chmod +x ./install
+sudo ./install auto
+
+```
+
+This will install the CodeDeploy Agent on EC2 creation.
+
+On Step5: Tags
+Add a tag to identify your instance:
+Key: Name Value: WhateverYouLike
+
+On Step6: Configure security group
+Add a HTTP type and a Custom TCP Rule to Port 3001 (the port our server is listening to) - this is just for demo purpose - for production you want to set an ALB or API gateway point to it.
+
+Create a CodeDeploy Application.
+The compute platform should be EC2 Instance/On-premises
+The service role should be the IAM role you created for CodeDeploy
+
+Because there is only one instance uncheck the Load Balancer box
+
+### Create a pipeline
+
+The source provider should be Github v2
+Connect to Github and choose your repo and main branch
+
+Wait until deployed. And you can access your app using the Public IPv4 DNS from your EC2 role.
+Any changes you push to github will be automatically deployed.
