@@ -4,8 +4,6 @@ import OpenGraphMeta from "../components/meta/OpenGraphMeta";
 import TwitterCardMeta from "../components/meta/TwitterCardMeta";
 import { SocialList } from "../components/SocialList";
 
-
-
 export default function Index() {
   return (
     <Layout>
@@ -23,7 +21,10 @@ export default function Index() {
               </a>
             </div>
             <div className="project">
-              <a href="https://rafachess.xyz" target="_blank">
+              <a
+                href="https://chess-backend-2021-rafa.herokuapp.com/"
+                target="_blank"
+              >
                 <img src="/images/rafachess.png" />
                 <h4>Multiplayer Chess</h4>
               </a>
