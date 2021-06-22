@@ -1,0 +1,50 @@
+---
+slug: cli-contact-info
+title: Create a CLI to share your contact information
+date: 2021-06-22
+author: rafael
+tags:
+  - node
+---
+
+demo
+
+```
+npx @vianarafael/business-card
+```
+
+# Step1. Create a npm account
+
+https://www.npmjs.com/
+
+After verifying the email.
+
+# Step 2. Write the code
+
+Initialize a project
+
+```
+npm init
+```
+
+On the entry point of your project console.log your contact information.
+
+# Step 3. Publish your project
+
+Login to npm from the command line
+
+```
+npm login
+```
+
+and publish your project
+
+```
+npm publish --access public
+```
+
+Now, other users can access your information using npx:
+
+```
+npx @your-user-name/your-project-name
+```
