@@ -12,33 +12,14 @@ export default function Index() {
       <TwitterCardMeta url={"/"} />
       <div className="container">
         <div>
-          <h1>Recent Projects</h1>
-          <div className="projects-container">
-            <div className="project">
-              <a href="https://rafaflix.com" target="_blank">
-                <img src="/images/rafaflix.png" alt="netflix clone" />
-                <h4>Watch List</h4>
-              </a>
-            </div>
-            <div className="project">
-              <a
-                href="https://chess-backend-2021-rafa.herokuapp.com/"
-                target="_blank"
-              >
-                <img src="/images/rafachess.png" />
-                <h4>Multiplayer Chess</h4>
-              </a>
-            </div>
-            <div className="project">
-              <a href="http://3.14.10.124/" target="_blank">
-                <img src="/images/rafascode.png" />
-                <h4>Interactive coding environment</h4>
-              </a>
-            </div>
-          </div>
+          <h1>
+            Hi, I'm Rafael<span className="fancy">.</span>
+          </h1>
+          <h2>I write code and blog about technology.</h2>
           <SocialList />
         </div>
       </div>
+
       <style jsx>{`
         .container {
           display: flex;
